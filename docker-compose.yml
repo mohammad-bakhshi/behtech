@@ -1,0 +1,10 @@
+services:
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: ./
+    volumes:
+      - /node_modules
+      - .:/app
+    env_file:
+      - .env
