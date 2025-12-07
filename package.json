@@ -6,6 +6,7 @@
     "start:prod": "node index.js",
     "start:dev": "node --watch index.js"
   },
+  "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
