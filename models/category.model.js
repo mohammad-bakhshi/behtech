@@ -9,6 +9,7 @@ const categorySchema = new Schema({
   name: {
     type: String,
     required: "Name is required!",
+    unique: true,
   },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },

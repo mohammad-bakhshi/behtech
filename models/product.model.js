@@ -39,15 +39,15 @@ const productSchema = new Schema({
     unique: true,
     required: "Product Code is required",
   },
-  category_id: {
+  category: {
     type: Schema.Types.ObjectId,
-    required: "Category ID is required",
     ref: "Category",
+    required: "Category ID is required",
   },
-  subCategory_id: {
+  subCategory: {
     type: Schema.Types.ObjectId,
-    required: "SubCategory ID is required",
     ref: "SubCategory",
+    required: "SubCategory ID is required",
   },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },

@@ -1,4 +1,5 @@
 import express from "express";
+import { upload } from "../config/upload.js";
 import {
   importProducts,
   getProducts,
@@ -6,7 +7,7 @@ import {
 
 const router = express.Router();
 
-router.post("/import", importProducts);
+router.post("/import", upload.single("products"), importProducts);
 router.get("/products", getProducts);
 
 export default router;
