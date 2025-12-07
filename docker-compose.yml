@@ -1,5 +1,6 @@
 services:
   api:
+    container_name: api
     build:
       dockerfile: Dockerfile
       context: ./
@@ -8,3 +9,18 @@ services:
       - .:/app
     env_file:
       - .env
+  db:
+    container_name: db
+    image: mongo:latest
+    env_file:
+      - .env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${DB_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "27017:${DB_PORT}"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
