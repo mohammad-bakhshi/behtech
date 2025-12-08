@@ -35,13 +35,20 @@ export const importProducts = async (req, res) => {
             }
           }
         });
+
         record["warrantyStartDate"] = convertJalaliToISO(
           record["warrantyStartDate"]
         );
+
+        record["warrantyEndDate"] = convertJalaliToISO(
+          record["warrantyEndDate"]
+        );
+
         record["warrantyEndDate"] = addMonthToDate(
           record["warrantyStartDate"],
           record["warrantyDuration"]
         );
+
         records.push(record);
       }
     }
@@ -74,6 +81,8 @@ export const importProducts = async (req, res) => {
       const productExists = await Product.findOne({
         productCode: record.productCode,
       });
+      console.log(productExists);
+
       if (!productExists) {
         try {
           const product = {
@@ -221,5 +230,12 @@ export const getProducts = async (req, res) => {
     res.status(200).json({ products, count });
   } catch (error) {
     console.log(error);
+
+    if (error.code === 11000) {
+      return res
+        .status(400)
+        .send({ success: false, message: "Failed to upload the excel file!" });
+    }
+    res.status(500).send({ success: false, message: error.message });
   }
 };
