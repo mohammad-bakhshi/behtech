@@ -6,6 +6,7 @@ export const connectDB = async (url, dbName) => {
     process.exit(1);
   }
   try {
+    mongoose.set("strictQuery", false);
     await mongoose.connect(url, { dbName });
     console.log("Database connection established!");
   } catch (error) {

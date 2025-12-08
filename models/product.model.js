@@ -16,7 +16,6 @@ const productSchema = new Schema({
   },
   description: {
     type: String,
-    required: false,
   },
   price: {
     type: Number,
@@ -42,12 +41,10 @@ const productSchema = new Schema({
   category: {
     type: Schema.Types.ObjectId,
     ref: "Category",
-    required: "Category ID is required",
   },
   subCategory: {
     type: Schema.Types.ObjectId,
     ref: "SubCategory",
-    required: "SubCategory ID is required",
   },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
