@@ -162,6 +162,8 @@ export const getProductsValidation = (req, res, next) => {
           "The 'Date' query parameter must be a valid date format (e.g., YYYY-MM-DD or ISO format).",
       });
     }
+    req.items.warrantyStartDateFrom = warrantyStartDateFromObject;
+    req.items.warrantyStartDateTo = warrantyStartDateToObject;
   }
   if (warrantyEndDateFrom !== undefined && warrantyEndDateTo !== undefined) {
     const warrantyEndDateFromObject = new Date(warrantyEndDateFrom);
@@ -176,6 +178,8 @@ export const getProductsValidation = (req, res, next) => {
           "The 'Date' query parameter must be a valid date format (e.g., YYYY-MM-DD or ISO format).",
       });
     }
+    req.items.warrantyEndDateFrom = warrantyEndDateFromObject;
+    req.items.warrantyEndDateTo = warrantyEndDateToObject;
   }
   next();
 };

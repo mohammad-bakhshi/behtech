@@ -81,8 +81,6 @@ export const importProducts = async (req, res) => {
       const productExists = await Product.findOne({
         productCode: record.productCode,
       });
-      console.log(productExists);
-
       if (!productExists) {
         try {
           const product = {
@@ -208,13 +206,12 @@ export const getProducts = async (req, res) => {
       req.items.warrantyEndDateTo &&
       query["$and"].push({
         warrantyEndDate: {
-          $lte: req.query.warrantyEndDateFrom,
-          $gte: req.query.warrantyEndDateTo,
+          $lte: req.items.warrantyEndDateTo,
+          $gte: req.items.warrantyEndDateFrom,
         },
       });
 
     const products = await Product.find(query, {
-      created_at: 0,
       updated_at: 0,
       __v: 0,
     })
