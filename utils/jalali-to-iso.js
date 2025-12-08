@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment from "moment-jalaali";
 
 export const convertJalaliToISO = (jalaliDateString) => {
   const m = moment(jalaliDateString, "jYYYY/jMM/jDD", "fa");
