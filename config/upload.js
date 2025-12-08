@@ -23,7 +23,7 @@ if (!fs.existsSync("uploads")) {
 export const upload = multer({
   storage: storage,
   // Optional: Limit file size and type
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  limits: { fileSize: 10 * 1024 * 1024 }, // 5MB limit
   fileFilter: (req, file, cb) => {
     // Only accept Excel files (.xlsx or .xls)
     if (
