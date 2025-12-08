@@ -113,69 +113,113 @@ export const importProducts = async (req, res) => {
 
 export const getProducts = async (req, res) => {
   try {
-    const {
-      name,
-      productCode,
-      categoryName,
-      subCategoryName,
-      categoryIds,
-      subcategoryIds,
-      status,
-      minPrice,
-      maxPrice,
-      minAmper,
-      maxAmper,
-      warrantyActive,
-      warrantyStartDateFrom,
-      warrantyStartDateTo,
-      warrantyEndDateFrom,
-      warrantyEndDateTo,
-      sortField,
-      sortOrder,
-      page,
-      limit,
-    } = req.query;
-    // const sortCriteria = {
-    //   [sortField]: sortOrder === "asc" ? 1 : -1,
-    // };
-    // const now = new Date();
-    // const products = await Product.find(
-    //   {
-    //     $or: [
-    //       { name: { $regex: name, $options: "i" } },
-    //       { productCode: { $regex: productCode, $options: "i" } },
-    //       { category: { name: { $regex: categoryName, $options: "i" } } },
-    //       { subCategory: { name: { $regex: subCategoryName, $options: "i" } } },
-    //     ],
-    //     $and: [
-    //       {
-    //         category: { _id: { $in: [categoryIds] } },
-    //         subCategory: { _id: { $in: [subcategoryIds] } },
-    //         status,
-    //         price: { $lte: maxPrice },
-    //         price: { $gte: minPrice },
-    //         amp: { $lte: maxAmper },
-    //         amp: { $gte: minAmper },
-    //         warrantyStartDate: { $lte: now },
-    //         warrantyEndDate: { $gte: now },
-    //         warrantyStartDate: { $lte: warrantyStartDateFrom },
-    //         warrantyStartDate: { $gte: warrantyStartDateTo },
-    //         warrantyEndDate: { $lte: warrantyEndDateFrom },
-    //         warrantyEndDate: { $gte: warrantyEndDateTo },
-    //       },
-    //     ],
-    //   },
-    //   { created_at: 0, updated_at: 0, __v: 0 }
-    // )
-    //   .populate([
-    //     { path: "category", select: "-__v -created_at -updated_at" },
-    //     { path: "subCategory", select: "-__v -created_at -updated_at" },
-    //   ])
-    //   .sort(sortCriteria)
-    //   .skip((page - 1) * limit)
-    //   .limit(limit)
-    //   .lean();
+    const now = new Date();
+    const query = { $or: [], $and: [] };
+    //search
+    req.items.name &&
+      query["$or"].push({ name: { $regex: req.items.name, $options: "i" } });
+    req.items.productCode &&
+      query["$or"].push({
+        productCode: { $regex: req.items.productCode },
+      });
+    if (req.items.category) {
+      const category = await Category.findOne({
+        name: { $regex: req.items.category, $options: "i" },
+      });
+      if (category) {
+        query["$or"].push({
+          category: category._id,
+        });
+      }
+    }
+    if (req.items.subCategory) {
+      const subCategory = await SubCategory.findOne({
+        name: { $regex: req.items.subCategory, $options: "i" },
+      });
+      if (subCategory) {
+        query["$or"].push({
+          subCategory: subCategory._id,
+        });
+      }
+    }
+
+    //filters
+    if (req.items.categoryIds) {
+      req.items.categoryIds.length > 0 &&
+        query["$and"].push({
+          category: { $in: req.items.categoryIds },
+        });
+    }
+    if (req.items.subcategoryIds) {
+      req.items.subcategoryIds.length > 0 &&
+        query["$and"].push({
+          subCategory: { _id: { $in: req.items.subcategoryIds } },
+        });
+    }
+
+    req.items.status !== undefined &&
+      query["$and"].push({
+        status: req.items.status,
+      });
+    req.items.maxPrice &&
+      query["$and"].push({
+        price: { $lte: req.items.maxPrice },
+      });
+    req.items.minPrice &&
+      query["$and"].push({
+        price: { $gte: req.items.minPrice },
+      });
+    req.items.maxAmper &&
+      query["$and"].push({
+        amp: { $lte: req.items.maxAmper },
+      });
+    req.items.minAmper &&
+      query["$and"].push({
+        amp: { $gte: req.items.minAmper },
+      });
+    if (req.items.warrantyActive !== undefined) {
+      if (req.items.warrantyActive === true) {
+        query["$and"].push({
+          warrantyStartDate: { $lte: now },
+          warrantyEndDate: { $gte: now },
+        });
+      }
+    }
+
+    req.items.warrantyStartDateFrom &&
+      req.items.warrantyStartDateTo &&
+      query["$and"].push({
+        warrantyStartDate: {
+          $lte: new Date(req.items.warrantyStartDateTo),
+          $gte: new Date(req.items.warrantyStartDateFrom),
+        },
+      });
+
+    req.items.warrantyEndDateFrom &&
+      req.items.warrantyEndDateTo &&
+      query["$and"].push({
+        warrantyEndDate: {
+          $lte: req.query.warrantyEndDateFrom,
+          $gte: req.query.warrantyEndDateTo,
+        },
+      });
+
+    const products = await Product.find(query, {
+      created_at: 0,
+      updated_at: 0,
+      __v: 0,
+    })
+      .populate([
+        { path: "category", select: "-__v -created_at -updated_at" },
+        { path: "subCategory", select: "-__v -created_at -updated_at" },
+      ])
+      .sort(req.items.sortCriteria)
+      .skip((req.items.page - 1) * req.items.limit)
+      .limit(req.items.limit)
+      .lean();
     const count = await Product.countDocuments({});
     res.status(200).json({ products, count });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
