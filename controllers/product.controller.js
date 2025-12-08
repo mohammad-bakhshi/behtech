@@ -135,46 +135,46 @@ export const getProducts = async (req, res) => {
       page,
       limit,
     } = req.query;
-    const sortCriteria = {
-      [sortField]: sortOrder === "asc" ? 1 : -1,
-    };
-    const now = new Date();
-    const products = await Product.find(
-      {
-        $or: [
-          { name: { $regex: name, $options: "i" } },
-          { productCode: { $regex: productCode, $options: "i" } },
-          { category: { name: { $regex: categoryName, $options: "i" } } },
-          { subCategory: { name: { $regex: subCategoryName, $options: "i" } } },
-        ],
-        $and: [
-          {
-            category: { _id: { $in: [categoryIds] } },
-            subCategory: { _id: { $in: [subcategoryIds] } },
-            status,
-            price: { $lte: maxPrice },
-            price: { $gte: minPrice },
-            amp: { $lte: maxAmper },
-            amp: { $gte: minAmper },
-            warrantyStartDate: { $lte: now },
-            warrantyEndDate: { $gte: now },
-            warrantyStartDate: { $lte: warrantyStartDateFrom },
-            warrantyStartDate: { $gte: warrantyStartDateTo },
-            warrantyEndDate: { $lte: warrantyEndDateFrom },
-            warrantyEndDate: { $gte: warrantyEndDateTo },
-          },
-        ],
-      },
-      { created_at: 0, updated_at: 0, __v: 0 }
-    )
-      .populate([
-        { path: "category", select: "-__v -created_at -updated_at" },
-        { path: "subCategory", select: "-__v -created_at -updated_at" },
-      ])
-      .sort(sortCriteria)
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .lean();
+    // const sortCriteria = {
+    //   [sortField]: sortOrder === "asc" ? 1 : -1,
+    // };
+    // const now = new Date();
+    // const products = await Product.find(
+    //   {
+    //     $or: [
+    //       { name: { $regex: name, $options: "i" } },
+    //       { productCode: { $regex: productCode, $options: "i" } },
+    //       { category: { name: { $regex: categoryName, $options: "i" } } },
+    //       { subCategory: { name: { $regex: subCategoryName, $options: "i" } } },
+    //     ],
+    //     $and: [
+    //       {
+    //         category: { _id: { $in: [categoryIds] } },
+    //         subCategory: { _id: { $in: [subcategoryIds] } },
+    //         status,
+    //         price: { $lte: maxPrice },
+    //         price: { $gte: minPrice },
+    //         amp: { $lte: maxAmper },
+    //         amp: { $gte: minAmper },
+    //         warrantyStartDate: { $lte: now },
+    //         warrantyEndDate: { $gte: now },
+    //         warrantyStartDate: { $lte: warrantyStartDateFrom },
+    //         warrantyStartDate: { $gte: warrantyStartDateTo },
+    //         warrantyEndDate: { $lte: warrantyEndDateFrom },
+    //         warrantyEndDate: { $gte: warrantyEndDateTo },
+    //       },
+    //     ],
+    //   },
+    //   { created_at: 0, updated_at: 0, __v: 0 }
+    // )
+    //   .populate([
+    //     { path: "category", select: "-__v -created_at -updated_at" },
+    //     { path: "subCategory", select: "-__v -created_at -updated_at" },
+    //   ])
+    //   .sort(sortCriteria)
+    //   .skip((page - 1) * limit)
+    //   .limit(limit)
+    //   .lean();
     const count = await Product.countDocuments({});
     res.status(200).json({ products, count });
   } catch (error) {}
