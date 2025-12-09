@@ -6,9 +6,11 @@ import { convertJalaliToISO, addMonthToDate } from "../utils/jalali-to-iso.js";
 import { Product } from "../models/product.model.js";
 import { Category } from "../models/category.model.js";
 import { SubCategory } from "../models/subcategory.model.js";
+import { logger } from "../config/winston.js";
 
 export const importProducts = async (req, res) => {
   try {
+    logger.info("Importing products from Excel file proccess started.");
     if (!req.file) {
       return res.status(400).send("No file uploaded.");
     }
@@ -53,7 +55,7 @@ export const importProducts = async (req, res) => {
       }
     }
 
-    console.log(`Successfully parsed ${records.length} records.`);
+    logger.info(`Successfully parsed ${records.length} records.`);
 
     fs.unlinkSync(filePath);
 
@@ -82,33 +84,28 @@ export const importProducts = async (req, res) => {
         productCode: record.productCode,
       });
       if (!productExists) {
-        try {
-          const product = {
-            status: record.status,
-            name: record.name,
-            description: record.description,
-            price: record.price,
-            warrantyStartDate: record.warrantyStartDate,
-            warrantyEndDate: record.warrantyEndDate,
-            amp: record.amp,
-            productCode: record.productCode,
-            category: category ? category._id : null,
-            subCategory: subCategory ? subCategory._id : null,
-          };
-          await Product.create(product);
-        } catch (error) {
-          console.log(error);
-        }
+        const product = {
+          status: record.status,
+          name: record.name,
+          description: record.description,
+          price: record.price,
+          warrantyStartDate: record.warrantyStartDate,
+          warrantyEndDate: record.warrantyEndDate,
+          amp: record.amp,
+          productCode: record.productCode,
+          category: category ? category._id : null,
+          subCategory: subCategory ? subCategory._id : null,
+        };
+        await Product.create(product);
       }
     }
-
+    logger.info("Importing products from Excel file proccess ended.");
     res.status(200).json({
       message: `Import successful! Inserted ${records.length} records.`,
       preview: records.slice(0, 5), // Send back a small preview
     });
   } catch (error) {
-    console.log(error);
-
+    logger.error(error);
     if (error.code === 11000) {
       return res
         .status(400)
@@ -226,8 +223,7 @@ export const getProducts = async (req, res) => {
     const count = await Product.countDocuments({});
     res.status(200).json({ products, count });
   } catch (error) {
-    console.log(error);
-
+    logger.error(error);
     if (error.code === 11000) {
       return res
         .status(400)

@@ -1,9 +1,10 @@
 import moment from "moment-jalaali";
+import { logger } from "../config/winston.js";
 
 export const convertJalaliToISO = (jalaliDateString) => {
   const m = moment(jalaliDateString, "jYYYY/jMM/jDD", "fa");
   if (!m.isValid()) {
-    console.error("Invalid Jalali date provided.");
+    logger.error("Invalid Jalali date provided.");
     return null;
   }
   const isoString = m.toISOString();
