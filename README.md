@@ -53,7 +53,7 @@ Get list of products with filters and search performed on it.
 This endpoint list the products;
 You can pass different query parameters to filter the data comming.
 
-#### - page&limit used for pagination
+#### - page&limit used for pagination => must be positive integer
 
 #### - sortField&sortOrder used for sorting. for sortField you can use between amp,price,created_at,warrantyStartDate,warrantyEndDate and for sortOrder you can use between asc, desc.
 
@@ -69,7 +69,7 @@ You can pass different query parameters to filter the data comming.
 
 #### - subcategoryIds used for filtering products based on subcategory ids
 
-#### - status used for filtering products based on their status
+#### - status used for filtering products based on their status. must be boolean
 
 #### - maxPrice used for filtering products based on their maxPrice
 
@@ -79,7 +79,7 @@ You can pass different query parameters to filter the data comming.
 
 #### - minAmper used for filtering products based on their minAmper
 
-#### - warrantyActive used for filtering products if their warranty is active
+#### - warrantyActive used for filtering products if their warranty is active. must be boolean
 
 #### - warrantyStartDateFrom&warrantyStartDateTo used for filtering products if their warrantyStartDate is between warrantyStartDateFrom and warrantyStartDateTo
 
