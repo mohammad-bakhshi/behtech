@@ -31,11 +31,11 @@ A simple JavaScript project that imports Excel files of products, parses their c
 
 ## ⚙️ Architecture Explanation
 
-### Used MVC architectural. MVC is an architectural/design pattern that separates an application into three main logical components Model, View, and Controller. Each architectural component is built to handle specific development aspects of an application. It isolates the business logic and presentation layer from each other.
+Used MVC architectural. MVC is an architectural/design pattern that separates an application into three main logical components Model, View, and Controller. Each architectural component is built to handle specific development aspects of an application. It isolates the business logic and presentation layer from each other.
 
 ## ⛓️ API usage examples
 
-### This project exposes two primary endpoints for interacting with the import system and product data.
+#### This project exposes two primary endpoints for interacting with the import system and product data.
 
 ### 🧾 **1. POST `/api/import`**
 
@@ -51,3 +51,36 @@ Get list of products with filters and search performed on it.
 
 **Description:**  
 This endpoint list the products;
+You can pass different query parameters to filter the data comming.
+
+#### - page&limit used for pagination
+
+#### - sortField&sortOrder used for sorting. for sortField you can use between amp,price,created_at,warrantyStartDate,warrantyEndDate and for sortOrder you can use between asc, desc.
+
+#### - name used for searching products based on their name
+
+#### - productCode used for searching products based on their productCode
+
+#### - category used for searching products based on their category name
+
+#### - subCategory used for searching products based on their subCategory name
+
+#### - categoryIds used for filtering products based on category ids
+
+#### - subcategoryIds used for filtering products based on subcategory ids
+
+#### - status used for filtering products based on their status
+
+#### - maxPrice used for filtering products based on their maxPrice
+
+#### - minPrice used for filtering products based on their minPrice
+
+#### - maxAmper used for filtering products based on their maxAmper
+
+#### - minAmper used for filtering products based on their minAmper
+
+#### - warrantyActive used for filtering products if their warranty is active
+
+#### - warrantyStartDateFrom&warrantyStartDateTo used for filtering products if their warrantyStartDate is between warrantyStartDateFrom and warrantyStartDateTo
+
+#### - warrantyEndDateFrom&warrantyEndDateTo used for filtering products if their warrantyEndDate is between warrantyEndDateFrom and warrantyEndDateTo
