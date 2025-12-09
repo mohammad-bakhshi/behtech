@@ -157,7 +157,7 @@ export const getProducts = async (req, res) => {
     if (req.items.subcategoryIds) {
       req.items.subcategoryIds.length > 0 &&
         query["$and"].push({
-          subCategory: { _id: { $in: req.items.subcategoryIds } },
+          subCategory: { $in: req.items.subcategoryIds },
         });
     }
 

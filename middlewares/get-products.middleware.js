@@ -85,13 +85,14 @@ export const getProductsValidation = (req, res, next) => {
     req.items.subcategoryIds = actualSubCategoryIdsArray;
   }
   if (status !== undefined) {
-    if (typeof status !== "boolean") {
+    if (!["true", "false"].includes(status)) {
       return res.status(400).json({
         error: "Invalid 'status' parameter.",
         message: "The 'status' query parameter must be a boolean",
       });
     }
-    req.items.status = Boolean(status);
+    if (status === "true") req.items.status = true;
+    else req.items.status = false;
   }
   if (minPrice !== undefined) {
     const minPriceNumber = parseInt(minPrice, 10);
@@ -138,13 +139,14 @@ export const getProductsValidation = (req, res, next) => {
     req.items.maxAmper = maxAmperNumber;
   }
   if (warrantyActive !== undefined) {
-    if (typeof warrantyActive !== "boolean") {
+    if (!["true", "false"].includes(warrantyActive)) {
       return res.status(400).json({
         error: "Invalid 'warrantyActive' parameter.",
         message: "The 'warrantyActive' query parameter must be a boolean",
       });
     }
-    req.items.warrantyActive = Boolean(warrantyActive);
+    if (warrantyActive === "true") req.items.warrantyActive = true;
+    else req.items.warrantyActive = false;
   }
   if (
     warrantyStartDateFrom !== undefined &&
